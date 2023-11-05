@@ -27,11 +27,11 @@ jobs:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
-    - name: Configure Docker
-      run: gcloud auth configure-docker
-
     - name: Set up GCP Project
     - run: gcloud config set project ${{ env.GCP_PROJECT_ID }}
+
+    - name: Configure Docker
+      run: gcloud auth configure-docker
 
     - name: Build and Push Docker image
       run: |
