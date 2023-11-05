@@ -32,7 +32,7 @@ jobs:
 
     - name: Build and Push Docker image
       run: |
-        gcloud builds submit --tag gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE }}:latest --project ${{ env.GCP_PROJECT_ID }}
+        gcloud builds submit --tag gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE }}:latest
 
     - name: Deploy to Cloud Run
       run: |
