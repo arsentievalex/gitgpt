@@ -8,7 +8,7 @@ on:
 env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: 'us-west1'  # Change this to your GCP region
-  CLOUD_RUN_SERVICE_NAME: 'your-service-name'  # Change this to your Cloud Run service name
+  CLOUD_RUN_SERVICE_NAME: 'git-doc'  # Change this to your Cloud Run service name
   IMAGE: 'streamlit-app'  # Change this to your preferred image name
 
 jobs:
