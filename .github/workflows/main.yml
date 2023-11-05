@@ -30,6 +30,9 @@ jobs:
     - name: Configure Docker
       run: gcloud auth configure-docker
 
+    - name: Set up GCP Project
+    - run: gcloud config set project ${{ env.GCP_PROJECT_ID }}
+
     - name: Build and Push Docker image
       run: |
         gcloud builds submit --tag gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE }}:latest
