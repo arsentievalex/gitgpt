@@ -20,6 +20,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Authenticate with GCP
+      run: |
+        echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > gcp-key.json
+        gcloud auth activate-service-account --key-file=gcp-key.json
+
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@main
       with:
