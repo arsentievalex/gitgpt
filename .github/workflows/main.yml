@@ -1,0 +1,45 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main  # Set this to the branch you want to deploy from
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_REGION: 'us-west1'  # Change this to your GCP region
+  CLOUD_RUN_SERVICE_NAME: 'your-service-name'  # Change this to your Cloud Run service name
+  IMAGE: 'streamlit-app'  # Change this to your preferred image name
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ env.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Configure Docker
+      run: gcloud auth configure-docker
+
+    - name: Build and Push Docker image
+      run: |
+        gcloud builds submit --tag gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE }}:latest
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy ${{ env.CLOUD_RUN_SERVICE_NAME }} \
+          --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE }}:latest \
+          --platform managed \
+          --region ${{ env.GCP_REGION }} \
+          --allow-unauthenticated \
+          --project ${{ env.GCP_PROJECT_ID }}
+
