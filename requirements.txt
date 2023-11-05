@@ -1,0 +1,11 @@
+streamlit
+graphviz
+pydot
+openai
+llama-hub
+llama-index
+pypdf
+nltk
+langchain
+pdfkit
+markdown
