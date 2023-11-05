@@ -12,7 +12,6 @@ import pdfkit
 import base64
 import markdown
 
-####
 st.set_page_config(page_title="GitGPT", page_icon="✨", layout="wide", menu_items=None)
 
 
@@ -227,6 +226,7 @@ if 'gpt_key' not in st.session_state:
 if 'github_token' not in st.session_state:
     st.session_state.github_token = None
 
+st.write('test')
 st.title('GitGPT - GitHub Documentation Generator ✨')
 
 file_types_list = [
