@@ -12,7 +12,7 @@ import pdfkit
 import base64
 import markdown
 
-st.set_page_config(page_title="GitGPT", page_icon="✨", layout="wide", menu_items=None)
+st.set_page_config(page_title="GitDoc", page_icon="✨", layout="wide", menu_items=None)
 
 
 @st.cache_resource(show_spinner=False)
@@ -22,8 +22,7 @@ def get_loader():
 
 def load_index(docs):
     service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-4", temperature=0,
-                                                              system_prompt="You are a software development expert who is helping write code documentation for different audiences.",
-                                                              max_tokens=200))
+                                                              system_prompt="You are a software development expert who is helping write code documentation for different audiences"))
 
     index = VectorStoreIndex.from_documents(docs, service_context=service_context)
     return index
@@ -226,8 +225,7 @@ if 'gpt_key' not in st.session_state:
 if 'github_token' not in st.session_state:
     st.session_state.github_token = None
 
-st.write('test')
-st.title('GitGPT - GitHub Documentation Generator ✨')
+st.title('GitDoc - Generate Code Documentation In a Snap✨')
 
 file_types_list = [
     ".py",    # Python scripts
@@ -246,11 +244,12 @@ file_types_list = [
 
 with st.sidebar:
     st.subheader('Authentication')
-    st.session_state.gpt_key = st.text_input("OpenAI API Key", placeholder='**-************************************************')
-    st.session_state.github_token = st.text_input("GitHub Token", placeholder='***_************************************')
+    with st.expander('Enter your API keys'):
+        st.session_state.gpt_key = st.text_input("OpenAI API Key", placeholder='**-************************************************')
+        st.session_state.github_token = st.text_input("GitHub Token", placeholder='***_************************************')
 
     st.subheader('GitHub Repository')
-    st.session_state['github_url'] = st.text_input("GitHub URL", value="https://github.com/arsentievalex/streamlit-pptx-generator", help="Enter the URL of the GitHub repository you want to generate documentation for.")
+    st.session_state['github_url'] = st.text_input("GitHub URL", value="https://github.com/arsentievalex/gitdoc", help="Enter the URL of the GitHub repository you want to generate documentation for.")
 
     st.write('')
     with st.expander('Advanced'):
@@ -284,7 +283,7 @@ if 'output_text' in st.session_state:
 
         if download_button:
 
-            config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+            #config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
 
             # convert markdown to html for pdf export
             html_output = markdown.markdown(st.session_state['output_text'])
@@ -300,7 +299,7 @@ if 'output_text' in st.session_state:
             html_output += f'<img src="data:image/png;base64,{encoded_image_data}" alt="Flowchart diagram" />'
 
             file_name = f"{st.session_state.owner}_{st.session_state.repo}_{st.session_state.branch}.pdf"
-            pdfkit.from_string(html_output, file_name, configuration=config)
+            pdfkit.from_string(html_output, file_name)
 
             # with open('output.pdf', 'rb') as f:
             #     st.download_button(label="Download PDF", data=f, file_name='output.pdf', mime='application/pdf')
@@ -311,6 +310,8 @@ if 'output_text' in st.session_state:
             os.remove(file_name)
             os.remove('flowchart.png')
             os.remove('flowchart')
+
+
 
 
 
