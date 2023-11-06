@@ -10,6 +10,10 @@ GitDoc is a Streamlit application that leverages the power of GPT models to auto
 - **Customization Options**: Tailor the documentation style for techical or non-technical audiences.
 - **Export Functionality**: Export your generated documentation to PDF.
 
+## LLM Architecture
+The index embedding & querying is facilitated by LlamaIndex - a flexible framework that enables LLM applications to ingest, structure, access, and retrieve private data sources through Retrieval Augmented Generation (RAG).
+![rag](https://blog.streamlit.io/content/images/2023/08/rag-with-llamaindex-1.png)
+
 ## Installation
 
 Before you can run GitDoc, you'll need to have Python and Streamlit installed. Follow these steps to get started:
