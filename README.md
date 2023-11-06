@@ -122,4 +122,3 @@ Before you can run GitDoc, you'll need to have Python, Streamlit, and a couple o
 
 ---
 
-Please ensure that all the dependencies are correctly installed for the GitDoc app to function properly.
