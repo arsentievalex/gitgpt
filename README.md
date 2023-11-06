@@ -123,11 +123,3 @@ Before you can run GitDoc, you'll need to have Python, Streamlit, and a couple o
 ---
 
 Please ensure that all the dependencies are correctly installed for the GitDoc app to function properly.
-
-4. **Run the Streamlit App**
-
-   ```bash
-   streamlit run app.py
-   ```
-
-   The app should now be running and accessible through your web browser at the address indicated by Streamlit (typically `localhost:8501`).
