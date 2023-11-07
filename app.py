@@ -33,26 +33,18 @@ def load_docs(owner, repo, branch):
     """
     Load the documents from the Github repository.
     """
-    docs = None
-    if os.path.exists("docs.pkl"):
-        with open("docs.pkl", "rb") as f:
-            docs = pickle.load(f)
+    github_client = GithubClient(os.getenv("GITHUB_TOKEN"))
+    loader = GithubRepositoryReader(
+        github_client,
+        owner=owner,
+        repo=repo,
+        filter_file_extensions=([".py"], GithubRepositoryReader.FilterType.INCLUDE),
+        verbose=True,
+        concurrent_requests=10,
+    )
 
-    if docs is None:
-        github_client = GithubClient(os.getenv("GITHUB_TOKEN"))
-        loader = GithubRepositoryReader(
-            github_client,
-            owner=owner,
-            repo=repo,
-            filter_file_extensions=([".py"], GithubRepositoryReader.FilterType.INCLUDE),
-            verbose=True,
-            concurrent_requests=10,
-        )
+    docs = loader.load_data(branch=branch)
 
-        docs = loader.load_data(branch=branch)
-
-        with open("docs.pkl", "wb") as f:
-            pickle.dump(docs, f)
     return docs
 
 
@@ -172,8 +164,12 @@ def generate_graph():
         # call LLM to get the diagram response
         diagram_response = st.session_state.chat_engine.chat(diagram_prompt)
 
+        st.write(diagram_response.response)
+
         # extract code from response
         extracted_code = extract_code(diagram_response.response)
+
+        st.write(extracted_code)
 
         try:
             exec(extracted_code)
