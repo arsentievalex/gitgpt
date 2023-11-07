@@ -153,23 +153,19 @@ def on_submit_button_click():
 
 def generate_graph():
     with st.spinner('Generating flowchart diagram...⏳'):
-        diagram_prompt = """
+        diagram_prompt = f"""
         Create flowchart diagram for the code in context using Graphviz in Python.
         Ensure that the diagram is clear and shows the most important parts of the code.
         Use common naming conventions, and DO NOT render the dot variable.
         DO NOT include pip install steps.
-        The diagram should be written for a technical audience.
+        The diagram should be written for a {st.session_state.audience} audience.
         """
 
         # call LLM to get the diagram response
         diagram_response = st.session_state.chat_engine.chat(diagram_prompt)
 
-        st.write(diagram_response.response)
-
         # extract code from response
         extracted_code = extract_code(diagram_response.response)
-
-        st.write(extracted_code)
 
         try:
             exec(extracted_code)
@@ -267,10 +263,13 @@ if 'output_text' in st.session_state:
 
     # if graph is generated, show it
     if st.session_state['generated_graph'] == True:
-        st.write('')
-        st.header("Flowchart Diagram")
-        st.write('')
-        st.graphviz_chart(st.session_state.dot, use_container_width=True)
+        try:
+            st.write('')
+            st.header("Flowchart Diagram")
+            st.write('')
+            st.graphviz_chart(st.session_state.dot, use_container_width=True)
+        except:
+            pass
     else:
         st.write('')
         generate_graph()
@@ -286,15 +285,17 @@ if 'output_text' in st.session_state:
             # convert markdown to html for pdf export
             html_output = markdown.markdown(st.session_state['output_text'])
 
-            #append diagram image to html
-            image_path = "flowchart.png"
+            # check if flowchart.png exists
+            if os.path.exists('flowchart.png'):
+                #append diagram image to html
+                image_path = "flowchart.png"
 
-            # Convert image to base64 encoding
-            with open(image_path, "rb") as image_file:
-                encoded_image_data = base64.b64encode(image_file.read()).decode('utf-8')
+                # Convert image to base64 encoding
+                with open(image_path, "rb") as image_file:
+                    encoded_image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
-            # Embed the base64 encoded image in HTML
-            html_output += f'<img src="data:image/png;base64,{encoded_image_data}" alt="Flowchart diagram" />'
+                # Embed the base64 encoded image in HTML
+                html_output += f'<img src="data:image/png;base64,{encoded_image_data}" alt="Flowchart diagram" />'
 
             file_name = f"{st.session_state.owner}_{st.session_state.repo}_{st.session_state.branch}.pdf"
             pdfkit.from_string(html_output, file_name)
