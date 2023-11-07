@@ -243,7 +243,7 @@ with st.sidebar:
         st.session_state.github_token = st.text_input("GitHub Token", placeholder='***_************************************')
 
     st.subheader('GitHub Repository')
-    st.session_state['github_url'] = st.text_input("GitHub URL", value="https://github.com/arsentievalex/gitdoc", help="Enter the URL of the GitHub repository you want to generate documentation for.")
+    st.session_state['github_url'] = st.text_input("GitHub URL",  help="Enter the URL of the GitHub repository you want to generate documentation for.")
 
     st.write('')
     with st.expander('Advanced'):
