@@ -17,7 +17,7 @@ st.set_page_config(page_title="GitDoc", page_icon="✨", layout="wide", menu_ite
 
 @st.cache_resource(show_spinner=False)
 def get_loader():
-    download_loader("GithubRepositoryReader", custom_path=os.getcwd())
+    download_loader("GithubRepositoryReader")
 
 
 def load_index(docs):
@@ -131,7 +131,6 @@ def on_submit_button_click():
         st.error("Please enter a valid Github URL.")
         return
 
-    get_loader()
     docs = load_docs(owner=st.session_state.owner, repo=st.session_state.repo, branch=st.session_state.branch)
 
     index = load_index(docs)
@@ -209,6 +208,9 @@ def parse_github_url(url):
     st.session_state.branch = match.group('branch') if match.group('branch') else 'main'
 
 
+# download github loader
+get_loader()
+
 # check if the session state variables are initialized
 if "chat_engine" not in st.session_state:
     st.session_state.chat_engine = None
@@ -225,7 +227,7 @@ if 'gpt_key' not in st.session_state:
 if 'github_token' not in st.session_state:
     st.session_state.github_token = None
 
-st.title('GitDoc - Generate Code Documentation In a Snap✨')
+st.title('GitDoc - Generate Code Documentation In a Snap')
 
 file_types_list = [
     ".py",    # Python scripts
@@ -258,7 +260,7 @@ with st.sidebar:
         st.session_state.audience = st.selectbox('Audience', ['technical', 'non-technical'])
 
     st.write('')
-    run_button = st.button('Generate Documentation 🪄', on_click=on_submit_button_click)
+    run_button = st.button('Generate Documentation', on_click=on_submit_button_click)
 
 # For Showing the Streaming Output
 streaming_box = st.empty()
