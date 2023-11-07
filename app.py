@@ -21,7 +21,7 @@ def get_loader():
 
 
 def load_index(docs):
-    service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-4", temperature=0,
+    service_context = ServiceContext.from_defaults(llm=OpenAI(model=st.session_state.model, temperature=0,
                                                               system_prompt="You are a software development expert who is helping write code documentation for different audiences"))
 
     index = VectorStoreIndex.from_documents(docs, service_context=service_context)
@@ -218,6 +218,8 @@ if 'gpt_key' not in st.session_state:
     st.session_state.gpt_key = None
 if 'github_token' not in st.session_state:
     st.session_state.github_token = None
+if 'model' not in st.session_state:
+    st.session_state.model = None
 
 st.title('GitDoc - Generate Code Documentation In a Snap')
 
@@ -248,7 +250,7 @@ with st.sidebar:
     st.write('')
     with st.expander('Advanced'):
         file_types = st.multiselect(label='File Types', options=file_types_list, default='.py')
-        model = st.selectbox('Model', ['gpt-4', 'gpt-3.5-turbo'])
+        st.session_state.model = st.selectbox('Model', ['gpt-4', 'gpt-4-1106-preview', 'gpt-3.5-turbo'])
         st.session_state.audience = st.selectbox('Audience', ['technical', 'non-technical'])
 
     st.write('')
